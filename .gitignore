@@ -1,0 +1,25 @@
+# Rust / Cargo
+target/
+*.rs.bk
+*.rmeta
+*.rlib
+Cargo.lock
+
+# Build artifacts
+/debug/
+/release/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Caches
+.fingerprint/
+incremental/
+/target
