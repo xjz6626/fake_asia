@@ -1,7 +1,19 @@
 [package]
 name = "fake_asia"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["fake_asia contributors"]
+description = "A realistic fake data generator library for Asian countries (China, Japan, South Korea, India) with authentic postal codes"
+documentation = "https://docs.rs/fake_asia"
+repository = "https://github.com/yourusername/fake_asia"
+license = "MIT"
+keywords = ["fake", "data", "generator", "asia", "test"]
+categories = ["development-tools::testing"]
+readme = "README.md"
 
 [dependencies]
 rand = "0.8"
+
+[[example]]
+name = "basic_usage"
+path = "examples/basic_usage.rs"
