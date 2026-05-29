@@ -1,0 +1,13 @@
+[package]
+name = "fake_asia_derive"
+version = "0.1.0"
+edition = "2021"
+description = "Derive macro for fake_asia"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "2", features = ["full"] }
+quote = "1"
+proc-macro2 = "1"

@@ -28,13 +28,17 @@
 
 ### 🇨🇳 中国数据生成
 
-- **姓名**：100个常见姓氏 + 男性/女性名字
+- **姓名**：100+个常见姓氏 + 男性/女性名字
 - **手机号**：真实的号段前缀（130-189系列）
 - **座机号**：区号 + 7-8位号码
-- **身份证号**：18位标准格式，带校验码
+- **身份证号**：18位标准格式，带校验码（也支持15位旧版和指定省份生成）
+- **身份证验证**：验证中国身份证号码（地区码、生日、校验码）
 - **地址**：省份、城市、街道、6位**真实邮编**
 - **公司名**：城市 + 关键词 + 公司类型
 - **车牌号**：省份简称 + 字母 + 数字组合
+- **新能源车牌**：8位格式（D=纯电动，F=混合动力）
+- **银行卡号**：生成有效银行卡号，含Luhn校验（支持11家中国银行）
+- **银行卡验证**：使用Luhn算法验证银行卡号
 - **电子邮件**：常见域名（QQ、163、Gmail等）
 
 ### 🇯🇵 日本数据生成
@@ -42,6 +46,7 @@
 - **姓名**：常见日本姓氏和名字（男/女）
 - **手机号**：090/080/070系列
 - **座机号**：区号（03、06等）+ 号码
+- **公司名**：日本公司名（3种生成模式）
 - **地址**：都道府县、城市、街道、7位**真实邮编**（XXX-XXXX格式）
 - **电子邮件**：国际域名
 
@@ -69,6 +74,16 @@
 [dependencies]
 fake_asia = "0.1.0"
 ```
+
+### 可选特性
+
+```toml
+[dependencies]
+fake_asia = { version = "0.1.0", features = ["serde"] }
+```
+
+- `serde` - 启用所有数据结构的 `Serialize`/`Deserialize` 支持
+- `fake_asia_derive` - 启用 `#[derive(FakeAsia)]` 宏，可为自定义结构体自动实现 FakeAsia trait
 
 ## 快速开始
 
@@ -230,6 +245,7 @@ fn main() {
 - `chinese_male_first_name(&mut rng)` - 随机男性名字
 - `chinese_female_first_name(&mut rng)` - 随机女性名字
 - `chinese_first_name(&mut rng)` - 随机名字（男/女）
+- `chinese_name(&mut rng)` - 完整姓名（姓氏 + 名字）
 
 **联系方式：**
 - `chinese_phone_number(&mut rng)` - 11位手机号
@@ -238,12 +254,20 @@ fn main() {
 
 **身份信息：**
 - `chinese_id_card(&mut rng)` - 18位身份证号（带校验码）
+- `chinese_id_card_with_province(&mut rng, province)` - 指定省份的身份证号
+- `chinese_id_card_15(&mut rng)` - 15位旧版身份证号
+- `is_valid_chinese_id(id)` - 验证中国身份证号码
 - `chinese_license_plate(&mut rng)` - 车牌号
+- `chinese_new_energy_license_plate(&mut rng)` - 新能源车牌号（8位）
 
 **地址和公司：**
 - `chinese_address(&mut rng)` - 完整地址（返回 `ChineseAddress` 结构体）
 - `chinese_city(&mut rng)` - 城市名
 - `chinese_company(&mut rng)` - 公司名（返回 `ChineseCompany` 结构体）
+
+**金融：**
+- `generate_chinese_bank_card(&mut rng)` - 有效银行卡号（16-19位，Luhn校验）
+- `is_valid_bank_card(card)` - 验证银行卡号（Luhn算法）
 
 **批量生成：**
 - `chinese_person(&mut rng)` - 生成完整的人员信息

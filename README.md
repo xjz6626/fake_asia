@@ -28,13 +28,17 @@
 
 ### 🇨🇳 China Data Generation
 
-- **Names**: 100 common surnames + male/female given names
+- **Names**: 100+ common surnames + male/female given names
 - **Mobile**: Real carrier prefixes (130-189 series)
 - **Landline**: Area codes + 7-8 digit numbers
-- **ID Card**: 18-digit format with check digit
+- **ID Card**: 18-digit format with check digit (also supports 15-digit old format and province-specific generation)
+- **ID Validation**: Validate Chinese ID cards (area code, birthday, check digit)
 - **Address**: Province, city, street, 6-digit **real postal code**
 - **Company**: City + keywords + company type
 - **License Plate**: Province code + letter + number combination
+- **New Energy Plate**: 8-character format (D=electric, F=hybrid)
+- **Bank Card**: Generate valid bank card numbers with Luhn check (11 Chinese banks)
+- **Bank Card Validation**: Validate bank card numbers using Luhn algorithm
 - **Email**: Common domains (QQ, 163, Gmail, etc.)
 
 ### 🇯🇵 Japan Data Generation
@@ -42,6 +46,7 @@
 - **Names**: Common Japanese surnames and given names (male/female)
 - **Mobile**: 090/080/070 series
 - **Landline**: Area codes (03, 06, etc.) + numbers
+- **Company**: Japanese company names (3 generation modes)
 - **Address**: Prefecture, city, street, 7-digit **real postal code** (XXX-XXXX format)
 - **Email**: International domains
 
@@ -69,6 +74,16 @@ Add to your `Cargo.toml`:
 [dependencies]
 fake_asia = "0.1.0"
 ```
+
+### Optional Features
+
+```toml
+[dependencies]
+fake_asia = { version = "0.1.0", features = ["serde"] }
+```
+
+- `serde` - Enables `Serialize`/`Deserialize` for all data structs
+- `fake_asia_derive` - Enables `#[derive(FakeAsia)]` macro for custom structs
 
 ## Quick Start
 
@@ -230,6 +245,7 @@ fn main() {
 - `chinese_male_first_name(&mut rng)` - Random male given name
 - `chinese_female_first_name(&mut rng)` - Random female given name
 - `chinese_first_name(&mut rng)` - Random given name (male/female)
+- `chinese_name(&mut rng)` - Full name (surname + given name)
 
 **Contact:**
 - `chinese_phone_number(&mut rng)` - 11-digit mobile number
@@ -238,12 +254,20 @@ fn main() {
 
 **Identity:**
 - `chinese_id_card(&mut rng)` - 18-digit ID card with check digit
+- `chinese_id_card_with_province(&mut rng, province)` - Province-specific ID card
+- `chinese_id_card_15(&mut rng)` - 15-digit old-format ID card
+- `is_valid_chinese_id(id)` - Validate Chinese ID card number
 - `chinese_license_plate(&mut rng)` - License plate number
+- `chinese_new_energy_license_plate(&mut rng)` - New energy vehicle plate (8-char)
 
 **Location:**
 - `chinese_address(&mut rng)` - Complete address (returns `ChineseAddress`)
 - `chinese_city(&mut rng)` - City name
 - `chinese_company(&mut rng)` - Company name (returns `ChineseCompany`)
+
+**Financial:**
+- `generate_chinese_bank_card(&mut rng)` - Valid bank card number (16-19 digits, Luhn check)
+- `is_valid_bank_card(card)` - Validate bank card number (Luhn algorithm)
 
 **Batch:**
 - `chinese_person(&mut rng)` - Complete person information
@@ -258,6 +282,7 @@ fn main() {
 - `japanese_landline(&mut rng)` - Landline (03-XXXX-XXXX)
 - `japanese_address(&mut rng)` - Complete address with real postal code
 - `japanese_city(&mut rng)` - City name
+- `japanese_company(&mut rng)` - Company name (returns `JapaneseCompany`)
 - `japanese_person(&mut rng)` - Complete person information
 - `japanese_persons(count, &mut rng)` - Multiple persons
 
@@ -288,6 +313,8 @@ fn main() {
 ### Utility Functions
 
 - `generate_multiple(count, &mut rng, generator)` - Generic batch generation function
+- `is_valid_chinese_id(id)` - Validate Chinese ID card (18-digit or 15-digit)
+- `is_valid_bank_card(card)` - Validate bank card number (Luhn algorithm)
 
 ### Data Structures
 
@@ -298,6 +325,16 @@ pub struct ChineseAddress {
     pub city: &'static str,
     pub street: String,
     pub postal_code: String,  // Real 6-digit postal code
+}
+
+// Chinese company
+pub struct ChineseCompany {
+    pub name: String,
+}
+
+// Japanese company
+pub struct JapaneseCompany {
+    pub name: String,
 }
 
 // Japanese address
@@ -343,7 +380,7 @@ pub trait FakeAsia {
 Implemented for:
 - `String` - Generates Chinese full name
 - `ChineseAddress`, `JapaneseAddress`, `KoreanAddress`, `IndianAddress`
-- `ChineseCompany`
+- `ChineseCompany`, `JapaneseCompany`
 
 ## Running Tests
 
@@ -370,6 +407,7 @@ All data used in this library comes from public information:
 - Addresses use real city names and **authentic postal codes**
 - Phone numbers use real carrier/area code prefixes
 - Chinese ID cards follow GB 11643-1999 standard
+- Bank card BINs are from publicly available standards (11 Chinese banks)
 - All generated data is randomly combined and does not correspond to real individuals
 
 ⚠️ **Note**: Generated data is for testing purposes only. Do not use for fraud or illegal activities.
@@ -377,7 +415,7 @@ All data used in this library comes from public information:
 ## Roadmap
 
 - [ ] Support more Asian countries (Singapore, Thailand, Vietnam, etc.)
-- [ ] Add bank card number generation
+- [x] Add bank card number generation
 - [ ] Add passport number generation
 - [ ] Support export to JSON/CSV formats
 - [ ] Add more realistic address data

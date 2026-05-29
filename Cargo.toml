@@ -11,8 +11,17 @@ keywords = ["fake", "data", "generator", "asia", "test"]
 categories = ["development-tools::testing"]
 readme = "README.md"
 
+[features]
+default = []
+serde = ["dep:serde"]
+
 [dependencies]
 rand = "0.8"
+serde = { version = "1", features = ["derive"], optional = true }
+fake_asia_derive = { path = "fake_asia_derive", optional = true }
+
+[dev-dependencies]
+serde_json = "1"
 
 [[example]]
 name = "basic_usage"
